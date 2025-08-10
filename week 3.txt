@@ -1,0 +1,283 @@
+# 1 Linked list insertion
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+struct Node* insertAtEnd(struct Node* head, int data) {
+    struct Node* newNode = malloc(sizeof(struct Node));
+    newNode->data = data; newNode->next = NULL;
+    if (!head) return newNode;
+    struct Node* temp = head;
+    while (temp->next) temp = temp->next;
+    temp->next = newNode;
+    return head;
+}
+void printList(struct Node* head) {
+    while (head) { printf("%d ", head->data); head = head->next; }
+}
+int main() {
+    struct Node* head = NULL;
+    head = insertAtEnd(head, 1);
+    head = insertAtEnd(head, 2);
+    head = insertAtEnd(head, 3);
+    printList(head);
+    return 0;
+}
+# Python
+class Node:
+    def __init__(self, data): self.data = data; self.next = None
+def insert_at_end(head, data):
+    new_node = Node(data)
+    if not head: return new_node
+    temp = head
+    while temp.next: temp = temp.next
+    temp.next = new_node
+    return head
+def print_list(head):
+    while head: print(head.data, end=" "); head = head.next
+head = None
+head = insert_at_end(head, 1)
+head = insert_at_end(head, 2)
+head = insert_at_end(head, 3)
+print_list(head)
+
+# 2 Insert in middle of linked list
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+void insertInMiddle(struct Node** head, int data) {
+    struct Node* newNode = malloc(sizeof(struct Node));
+    newNode->data = data; newNode->next = NULL;
+    if (*head == NULL) { *head = newNode; return; }
+    struct Node* slow = *head; struct Node* fast = (*head)->next;
+    while (fast && fast->next) { slow = slow->next; fast = fast->next->next; }
+    newNode->next = slow->next; slow->next = newNode;
+}
+int main() {
+    struct Node* head = NULL;
+    insertInMiddle(&head, 1);
+    insertInMiddle(&head, 2);
+    insertInMiddle(&head, 3);
+    while (head) { printf("%d ", head->data); head = head->next; }
+    return 0;
+}
+# Python
+class Node:
+    def __init__(self, data): self.data = data; self.next = None
+def insert_in_middle(head, data):
+    new_node = Node(data)
+    if not head: return new_node
+    slow, fast = head, head.next
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    new_node.next = slow.next
+    slow.next = new_node
+    return head
+def print_list(head):
+    while head: print(head.data, end=" "); head = head.next
+head = None
+head = insert_in_middle(head, 1)
+head = insert_in_middle(head, 2)
+head = insert_in_middle(head, 3)
+print_list(head)
+
+# 3 Delete a node
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+struct Node* deleteNode(struct Node* head, int key) {
+    if (!head) return head;
+    if (head->data == key) { struct Node* t = head; head = head->next; free(t); return head; }
+    struct Node* curr = head;
+    while (curr->next && curr->next->data != key) curr = curr->next;
+    if (curr->next) { struct Node* t = curr->next; curr->next = t->next; free(t); }
+    return head;
+}
+int main() {
+    struct Node* head = NULL; // Build list before deleting
+    return 0;
+}
+# Python
+class Node:
+    def __init__(self, data): self.data = data; self.next = None
+def delete_node(head, key):
+    if not head: return head
+    if head.data == key: return head.next
+    curr = head
+    while curr.next and curr.next.data != key:
+        curr = curr.next
+    if curr.next: curr.next = curr.next.next
+    return head
+
+# 4 Search in linked list
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+int search(struct Node* head, int key) {
+    while (head) {
+        if (head->data == key) return 1;
+        head = head->next;
+    }
+    return 0;
+}
+int main() { return 0; }
+# Python
+def search(head, key):
+    while head:
+        if head.data == key: return True
+        head = head.next
+    return False
+
+# 5 Nth node from end
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+int nthFromEnd(struct Node* head, int n) {
+    struct Node* first = head; struct Node* second = head;
+    for (int i=0; i<n; i++) {
+        if (!first) return -1;
+        first = first->next;
+    }
+    while (first) { first = first->next; second = second->next; }
+    return second->data;
+}
+# Python
+def nth_from_end(head, n):
+    first = head; second = head
+    for _ in range(n):
+        if not first: return None
+        first = first.next
+    while first:
+        first = first.next
+        second = second.next
+    return second.data
+
+# 6 Detect loop in linked list
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+int detectLoop(struct Node* head) {
+    struct Node *slow = head, *fast = head;
+    while (fast && fast->next) {
+        slow = slow->next; fast = fast->next->next;
+        if (slow == fast) return 1;
+    }
+    return 0;
+}
+# Python
+def detect_loop(head):
+    slow, fast = head, head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast: return True
+    return False
+
+# 7 Remove loop
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+void removeLoop(struct Node* loopNode, struct Node* head) {
+    struct Node* ptr1 = head;
+    struct Node* ptr2;
+    while (1) {
+        ptr2 = loopNode;
+        while (ptr2->next != loopNode && ptr2->next != ptr1) ptr2 = ptr2->next;
+        if (ptr2->next == ptr1) break;
+        ptr1 = ptr1->next;
+    }
+    ptr2->next = NULL;
+}
+# Python
+def remove_loop(head):
+    slow, fast = head, head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            ptr1 = head
+            while True:
+                ptr2 = slow
+                while ptr2.next != slow and ptr2.next != ptr1:
+                    ptr2 = ptr2.next
+                if ptr2.next == ptr1:
+                    ptr2.next = None
+                    return
+                ptr1 = ptr1.next
+
+# 8 Reverse linked list
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+struct Node* reverse(struct Node* head) {
+    struct Node* prev = NULL; struct Node* curr = head; struct Node* next = NULL;
+    while (curr) {
+        next = curr->next; curr->next = prev; prev = curr; curr = next;
+    }
+    return prev;
+}
+# Python
+def reverse(head):
+    prev = None
+    curr = head
+    while curr:
+        nxt = curr.next
+        curr.next = prev
+        prev = curr
+        curr = nxt
+    return prev
+
+# 9 Add two numbers represented by linked lists
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+struct Node* addTwoLists(struct Node* first, struct Node* second) {
+    struct Node* res = NULL; struct Node** last = &res;
+    int carry = 0;
+    while (first || second || carry) {
+        int sum = carry;
+        if (first) { sum += first->data; first = first->next; }
+        if (second) { sum += second->data; second = second->next; }
+        carry = sum / 10;
+        struct Node* newNode = malloc(sizeof(struct Node));
+        newNode->data = sum % 10; newNode->next = NULL;
+        *last = newNode; last = &(newNode->next);
+    }
+    return res;
+}
+# Python
+def add_two_lists(l1, l2):
+    dummy = Node(0)
+    curr = dummy
+    carry = 0
+    while l1 or l2 or carry:
+        s = carry
+        if l1: s += l1.data; l1 = l1.next
+        if l2: s += l2.data; l2 = l2.next
+        carry, val = divmod(s, 10)
+        curr.next = Node(val)
+        curr = curr.next
+    return dummy.next
+
+# 10 Hackerrank: Print elements of linked list
+// C
+#include <stdio.h>
+#include <stdlib.h>
+struct Node { int data; struct Node* next; };
+void printLinkedList(struct Node* head) {
+    while (head) { printf("%d\n", head->data); head = head->next; }
+}
+# Python
+def print_linked_list(head):
+    while head:
+        print(head.data)
+        head = head.next

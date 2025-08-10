@@ -1,0 +1,250 @@
+# 1 Print matrix in spiral form
+// C
+#include <stdio.h>
+int main() {
+    int r = 3, c = 4;
+    int mat[3][4] = { {1,2,3,4}, {5,6,7,8}, {9,10,11,12} };
+    int top = 0, bottom = r-1, left = 0, right = c-1;
+    while (top <= bottom && left <= right) {
+        for (int j = left; j <= right; ++j) printf("%d ", mat[top][j]);
+        top++;
+        for (int i = top; i <= bottom; ++i) printf("%d ", mat[i][right]);
+        right--;
+        if (top <= bottom) {
+            for (int j = right; j >= left; --j) printf("%d ", mat[bottom][j]);
+            bottom--;
+        }
+        if (left <= right) {
+            for (int i = bottom; i >= top; --i) printf("%d ", mat[i][left]);
+            left++;
+        }
+    }
+    printf("\n");
+    return 0;
+}
+# Python
+mat = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+top, bottom = 0, len(mat)-1
+left, right = 0, len(mat[0])-1
+res = []
+while top <= bottom and left <= right:
+    res.extend(mat[top][left:right+1]); top += 1
+    for i in range(top, bottom+1): res.append(mat[i][right])
+    right -= 1
+    if top <= bottom:
+        res.extend(mat[bottom][right:left-1:-1]); bottom -= 1
+    if left <= right:
+        for i in range(bottom, top-1, -1): res.append(mat[i][left])
+        left += 1
+print(res)
+
+# 2 Rotate matrix by 90 degree
+// C
+#include <stdio.h>
+void rotate90(int n, int a[n][n]) {
+    for (int i=0;i<n;i++)
+        for (int j=i;j<n;j++){
+            int t=a[i][j]; a[i][j]=a[j][i]; a[j][i]=t;
+        }
+    for (int i=0;i<n;i++)
+        for (int j=0;j<n/2;j++){
+            int t=a[i][j]; a[i][j]=a[i][n-1-j]; a[i][n-1-j]=t;
+        }
+}
+int main(){
+    int n=3;
+    int a[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+    rotate90(n,a);
+    for (int i=0;i<n;i++){ for (int j=0;j<n;j++) printf("%d ", a[i][j]); printf("\n"); }
+    return 0;
+}
+# Python
+mat = [[1,2,3],[4,5,6],[7,8,9]]
+mat = [list(row) for row in zip(*mat[::-1])]
+for row in mat: print(row)
+
+# 3 Sum of diagonals
+// C
+#include <stdio.h>
+int main(){
+    int n=3;
+    int a[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+    int sum=0;
+    for (int i=0;i<n;i++){
+        sum += a[i][i];
+        if (i != n-1-i) sum += a[i][n-1-i];
+    }
+    printf("%d\n", sum);
+    return 0;
+}
+# Python
+mat = [[1,2,3],[4,5,6],[7,8,9]]
+n = len(mat)
+s = sum(mat[i][i] for i in range(n)) + sum(mat[i][n-1-i] for i in range(n))
+if n % 2 == 1: s -= mat[n//2][n//2]
+print(s)
+
+# 4 Transpose of matrix
+// C
+#include <stdio.h>
+int main(){
+    int r=3, c=2;
+    int a[3][2] = {{1,2},{3,4},{5,6}};
+    for (int j=0;j<c;j++){
+        for (int i=0;i<r;i++) printf("%d ", a[i][j]);
+        printf("\n");
+    }
+    return 0;
+}
+# Python
+mat = [[1,2],[3,4],[5,6]]
+trans = list(map(list, zip(*mat)))
+for row in trans: print(row)
+
+# 5 Check if matrix is sparse
+// C
+#include <stdio.h>
+int main(){
+    int r=3,c=3;
+    int a[3][3] = {{0,0,3},{0,0,0},{1,0,0}};
+    int zeros=0;
+    for (int i=0;i<r;i++) for (int j=0;j<c;j++) if (a[i][j]==0) zeros++;
+    if (zeros > (r*c)/2) printf("Sparse\n"); else printf("Not Sparse\n");
+    return 0;
+}
+# Python
+mat = [[0,0,3],[0,0,0],[1,0,0]]
+zeros = sum(cell==0 for row in mat for cell in row)
+print("Sparse" if zeros > (len(mat)*len(mat[0]))/2 else "Not Sparse")
+
+# 6 Add two polynomials
+// C
+#include <stdio.h>
+int main(){
+    int p1[] = {5,0,10};
+    int n1 = 3;
+    int p2[] = {3,6,0,1};
+    int n2 = 4;
+    int n = n1>n2?n1:n2;
+    int res[10]={0};
+    for (int i=0;i<n;i++){
+        int a = (i<n1)?p1[i]:0;
+        int b = (i<n2)?p2[i]:0;
+        res[i] = a+b;
+    }
+    for (int i=0;i<n;i++) printf("%d ", res[i]);
+    printf("\n");
+    return 0;
+}
+# Python
+p1 = [5,0,10]
+p2 = [3,6,0,1]
+n = max(len(p1), len(p2))
+res = [(p1[i] if i<len(p1) else 0) + (p2[i] if i<len(p2) else 0) for i in range(n)]
+print(res)
+
+# 7 Multiply two polynomials
+// C
+#include <stdio.h>
+int main(){
+    int a[] = {1,2,3};
+    int b[] = {4,5};
+    int n1 = 3, n2 = 2;
+    int res[10] = {0};
+    for (int i=0;i<n1;i++) for (int j=0;j<n2;j++) res[i+j] += a[i]*b[j];
+    for (int i=0;i<n1+n2-1;i++) printf("%d ", res[i]);
+    printf("\n");
+    return 0;
+}
+# Python
+a = [1,2,3]
+b = [4,5]
+res = [0]*(len(a)+len(b)-1)
+for i in range(len(a)):
+    for j in range(len(b)):
+        res[i+j] += a[i]*b[j]
+print(res)
+
+# 8 Dynamic array operations
+// C
+#include <stdio.h>
+#include <stdlib.h>
+int main(){
+    int n = 2; /* example n (number of sequences) */
+    int q = 5; /* example queries count */
+    int **seq = malloc(n * sizeof(int*));
+    int *sizes = calloc(n, sizeof(int));
+    int *caps = malloc(n * sizeof(int));
+    for (int i=0;i<n;i++){ caps[i]=2; seq[i]=malloc(caps[i]*sizeof(int)); sizes[i]=0; }
+    /* Example operations: mimic hackerrank dynamic array behavior */
+    /* Append 5 to seq 0 */
+    int x = 0, y = 5, idx = 0;
+    if (sizes[idx] >= caps[idx]) { caps[idx]*=2; seq[idx]=realloc(seq[idx], caps[idx]*sizeof(int)); }
+    seq[idx][sizes[idx]++] = y;
+    /* Print and cleanup */
+    for (int i=0;i<n;i++){
+        for (int j=0;j<sizes[i];j++) printf("%d ", seq[i][j]);
+        printf("\n");
+        free(seq[i]);
+    }
+    free(seq); free(sizes); free(caps);
+    return 0;
+}
+# Python
+# Hackerrank Dynamic Array example
+n, q = 2, 5
+seq = [[] for _ in range(n)]
+lastAns = 0
+# example queries:
+queries = [(1,0,5),(1,1,7),(1,0,3),(2,1,0),(2,1,1)]
+for t,x,y in queries:
+    idx = (x ^ lastAns) % n
+    if t == 1:
+        seq[idx].append(y)
+    else:
+        lastAns = seq[idx][y % len(seq[idx])]
+        print(lastAns)
+
+# 9 Check if matrix is identity
+// C
+#include <stdio.h>
+int main(){
+    int n=3;
+    int a[3][3] = {{1,0,0},{0,1,0},{0,0,1}};
+    int ok=1;
+    for (int i=0;i<n;i++) for (int j=0;j<n;j++)
+        if ((i==j && a[i][j]!=1) || (i!=j && a[i][j]!=0)) ok=0;
+    printf(ok ? "Yes\n" : "No\n");
+    return 0;
+}
+# Python
+mat = [[1,0,0],[0,1,0],[0,0,1]]
+print(all((i==j and mat[i][j]==1) or (i!=j and mat[i][j]==0) for i in range(len(mat)) for j in range(len(mat))))
+
+# 10 Count zeros in a sorted matrix
+// C
+#include <stdio.h>
+int main(){
+    int n=3,m=3;
+    int a[3][3] = {{0,0,1},{0,1,1},{1,1,1}};
+    int i=0,j=m-1,count=0;
+    while(i<n && j>=0){
+        if (a[i][j]==0){ count += j+1; i++; }
+        else j--;
+    }
+    printf("%d\n", count);
+    return 0;
+}
+# Python
+mat = [[0,0,1],[0,1,1],[1,1,1]]
+n,m = len(mat), len(mat[0])
+i, j = 0, m-1
+count = 0
+while i < n and j >= 0:
+    if mat[i][j] == 0:
+        count += j+1
+        i += 1
+    else:
+        j -= 1
+print(count)
+```0
